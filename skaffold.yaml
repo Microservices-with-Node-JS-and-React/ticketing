@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false # don't push on Docker on build
+  artifacts:
+    - image: nkolchakov/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual: # manual configuration on what to do on file change
+          - src: 'src/**/*.ts'
+            dest: '.'
