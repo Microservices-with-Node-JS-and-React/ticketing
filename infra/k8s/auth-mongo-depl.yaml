@@ -1,0 +1,31 @@
+# create Pod - mongodb instance running on port 27017
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-mongo # for which Pods the Deployment is responsible
+  template:
+    metadata:
+      labels:
+        app: auth-mongo # name of Pod
+    spec:
+      containers:
+        - name: auth-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-mongo-srv
+spec:
+  selector:
+    app: auth-mongo # telling the service which Pods is going to govern
+  ports:
+    - name: db # logging, debugging purposes name
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
