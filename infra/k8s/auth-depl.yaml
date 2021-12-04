@@ -15,6 +15,13 @@ spec:
       containers:
         - name: auth
           image: nkolchakov/auth
+          # kubectl create secret generic jwt-secret --from-literal=JWT_KEY={secret}
+          env:
+            - name: JWT_KEY #inject with this name the below key as an env variable inside the Pod
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
 ---
 apiVersion: v1
 kind: Service
