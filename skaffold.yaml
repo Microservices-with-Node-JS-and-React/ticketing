@@ -16,3 +16,11 @@ build:
         manual: # manual configuration on what to do on file change
           - src: 'src/**/*.ts'
             dest: '.'
+    - image: nkolchakov/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.ts'
+            dest: '.'
