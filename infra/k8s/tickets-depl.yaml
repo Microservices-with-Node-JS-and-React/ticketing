@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: tickets
   template:
     metadata:
       labels:
-        app: auth
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: nkolchakov/auth
-          # kubectl create secret generic jwt-secret --from-literal=JWT_KEY={secret}
+        - name: tickets
+          image: nkolchakov/tickets
           env:
             - name: MONGO_URI
-              value: mongodb://auth-mongo-srv:27017/auth
-            - name: JWT_KEY #inject with this name the below key as an env variable inside the Pod
+              value: mongodb://tickets-mongo-srv:27017/tickets
+            - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
@@ -28,12 +27,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   selector:
-    app: auth
+    app: tickets
   ports:
-    - name: auth
+    - name: tickets
       protocol: TCP
       port: 3000
       targetPort: 3000
