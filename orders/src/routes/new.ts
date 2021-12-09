@@ -55,7 +55,7 @@ router.post(
     });
     await order.save();
 
-    // Publish an event for the order creation
+    //TODO: publish an order creation event
 
     res.status(201).send(order);
   }
