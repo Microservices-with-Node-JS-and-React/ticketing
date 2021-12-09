@@ -57,5 +57,7 @@ it('should reserve a ticket', async () => {
   expect(createdOrderResponse.body.ticket.id).toEqual(ticket.id);
 });
 
+it.todo('emits an order created event');
+
 // examples of the rest of generic validations
 // are present in the ticket service
