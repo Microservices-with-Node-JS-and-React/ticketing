@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { Order, OrderStatus } from './orders';
 
 interface TicketAttrs {
+  id: string;
   title: string;
   price: number;
 }
@@ -39,7 +40,13 @@ const ticketSchema = new mongoose.Schema(
 );
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+  // when using data replication ids between different services should match,
+  // override the _id with Ticket's original id
+  const { id: _id, ...rest } = attrs;
+  return new Ticket({
+    _id,
+    ...rest,
+  });
 };
 ticketSchema.methods.isReserved = async function () {
   // this === the ticked on which the `isReserved` method is called
