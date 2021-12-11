@@ -1,0 +1,31 @@
+# create Pod - redis instance running on port 6379
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-redis-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration-redis # for which Pods the Deployment is responsible
+  template:
+    metadata:
+      labels:
+        app: expiration-redis # name of Pod
+    spec:
+      containers:
+        - name: expiration-redis
+          image: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: expiration-redis-srv
+spec:
+  selector:
+    app: expiration-redis # telling the service which Pods is going to govern
+  ports:
+    - name: db # logging, debugging purposes name
+      protocol: TCP
+      port: 6379
+      targetPort: 6379
