@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Order, OrderStatus } from './orders';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface TicketAttrs {
   id: string;
@@ -9,12 +10,17 @@ interface TicketAttrs {
 
 export interface TicketDoc extends mongoose.Document {
   title: string;
+  version: number;
   price: number;
   isReserved(): Promise<boolean>;
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -39,6 +45,9 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   // when using data replication ids between different services should match,
   // override the _id with Ticket's original id
@@ -48,6 +57,16 @@ ticketSchema.statics.build = (attrs: TicketAttrs) => {
     ...rest,
   });
 };
+
+// if such versioned record is available in the replicate db,
+// then proceed with the incoming event
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  });
+};
+
 ticketSchema.methods.isReserved = async function () {
   // this === the ticked on which the `isReserved` method is called
 

@@ -10,13 +10,13 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     data: TicketUpdatedEvent['data'],
     msg: Message
   ): Promise<void> {
-    const { id, title, price } = data;
+    const ticket = await Ticket.findByEvent(data);
 
-    const ticket = await Ticket.findById(id);
     if (!ticket) {
-      throw new Error('Ticked not found');
+      throw new Error('Previously versioned Ticket not found');
     }
 
+    const { title, price } = data;
     ticket.set({ title, price });
     await ticket.save();
 
