@@ -19,6 +19,7 @@ it('should return 404 error if ticket does NOT exist', async () => {
 
 it('should return 400 error if ticket is reserved', async () => {
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 20,
   });
@@ -42,6 +43,7 @@ it('should return 400 error if ticket is reserved', async () => {
 
 it('should reserve a ticket', async () => {
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 20,
   });
@@ -60,6 +62,7 @@ it('should reserve a ticket', async () => {
 
 it('emits an order created event', async () => {
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 20,
   });
