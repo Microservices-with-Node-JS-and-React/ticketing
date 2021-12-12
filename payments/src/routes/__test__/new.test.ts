@@ -4,6 +4,7 @@ import { app } from '../../app';
 import { Order } from '../../models/order';
 import { OrderStatus } from '@nkgittix/common';
 import { stripe } from '../../stripe';
+import { Payment } from '../../models/payment';
 
 jest.mock('../../stripe');
 
@@ -61,7 +62,7 @@ it('should return a 400 when the order is cancelled', async () => {
     .expect(400);
 });
 
-it('should return a 204 when inputs are valid', async () => {
+it('should return a 201 when inputs are valid', async () => {
   const userId = new mongoose.Types.ObjectId().toHexString();
 
   const order = Order.build({
@@ -87,4 +88,12 @@ it('should return a 204 when inputs are valid', async () => {
     amount: order.price * 100,
     source: testToken,
   });
+
+  // verify payment is created
+  const payment = await Payment.findOne({
+    orderId: order.id,
+    stripeId: '1234',
+  });
+
+  expect(payment).not.toBeNull();
 });
