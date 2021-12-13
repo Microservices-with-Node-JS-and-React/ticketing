@@ -1,0 +1,12 @@
+name: tests
+
+on:
+# created, reopened or updated
+  pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 #take all the code
+      - run: cd auth && npm install && npm run test:ci
