@@ -1,4 +1,5 @@
-#auth change -> Build new image -> Push to docker hub -> Update deployment
+#auth change -> Build new image -> Push to docker hub -> Update deployment /
+# install digitalocean -> change context to it -> restart 
 name: deploy-auth
 
 on:
@@ -18,3 +19,8 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - run: docker push nkolchakov/auth
+      - uses: digitalocean/action-doct@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubectl rollout restart deployment auth-depl
