@@ -1,8 +1,10 @@
 name: tests-auth
 
 on:
-# created, reopened or updated
-  pull_request
+  # created, reopened or updated for specific path
+  pull_request:
+    paths:
+      - 'auth/**'
 
 jobs:
   build:

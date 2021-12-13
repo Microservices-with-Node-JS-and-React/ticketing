@@ -1,8 +1,9 @@
 name: tests-tickets
 
 on:
-# created, reopened or updated
-  pull_request
+  pull_request:
+    paths:
+      - 'tickets/**'
 
 jobs:
   build:
