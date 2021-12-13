@@ -15,7 +15,7 @@ beforeAll(async () => {
   const mongoUri = mongo.getUri();
 
   await mongoose.connect(mongoUri);
-});
+}, 60 * 1000);
 
 beforeEach(async () => {
   const collections = await mongoose.connection.db.collections();
@@ -28,7 +28,7 @@ beforeEach(async () => {
 afterAll(async () => {
   await mongo.stop();
   await mongoose.connection.close();
-});
+}, 60 * 1000);
 
 global.signin = async () => {
   const email = 'test@test.com';

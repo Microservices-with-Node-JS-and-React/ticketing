@@ -16,7 +16,7 @@ beforeAll(async () => {
   const mongoUri = mongo.getUri();
 
   await mongoose.connect(mongoUri);
-});
+}, 60 * 1000);
 
 beforeEach(async () => {
   jest.clearAllMocks();
@@ -30,7 +30,7 @@ beforeEach(async () => {
 afterAll(async () => {
   await mongo.stop();
   await mongoose.connection.close();
-});
+}, 60 * 1000);
 
 global.signin = (id?: string) => {
   // build a JWT payload {id, email}
